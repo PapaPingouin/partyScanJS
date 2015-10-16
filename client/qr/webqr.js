@@ -9,6 +9,7 @@ var gUM=false;
 var webkit=false;
 var moz=false;
 var v=null;
+var refreshDelai=500;
 
 var imghtml='<div id="qrfile"><canvas id="out-canvas" width="320" height="240"></canvas>'+
     '<div id="imghelp">drag and drop a QRCode here'+
@@ -19,49 +20,6 @@ var imghtml='<div id="qrfile"><canvas id="out-canvas" width="320" height="240"><
 
 var vidhtml = '<video id="v" autoplay></video>';
 
-function dragenter(e) {
-  e.stopPropagation();
-  e.preventDefault();
-}
-
-function dragover(e) {
-  e.stopPropagation();
-  e.preventDefault();
-}
-function drop(e) {
-  e.stopPropagation();
-  e.preventDefault();
-
-  var dt = e.dataTransfer;
-  var files = dt.files;
-  if(files.length>0)
-  {
-	handleFiles(files);
-  }
-  else
-  if(dt.getData('URL'))
-  {
-	qrcode.decode(dt.getData('URL'));
-  }
-}
-
-function handleFiles(f)
-{
-	var o=[];
-	
-	for(var i =0;i<f.length;i++)
-	{
-        var reader = new FileReader();
-        reader.onload = (function(theFile) {
-        return function(e) {
-            gCtx.clearRect(0, 0, gCanvas.width, gCanvas.height);
-
-			qrcode.decode(e.target.result);
-        };
-        })(f[i]);
-        reader.readAsDataURL(f[i]);	
-    }
-}
 
 function initCanvas(w,h)
 {
@@ -72,6 +30,15 @@ function initCanvas(w,h)
     gCanvas.height = h;
     gCtx = gCanvas.getContext("2d");
     gCtx.clearRect(0, 0, w, h);
+    
+    qrcode.callback = function( data ){
+		console.log('callback : ');
+		console.log( data );
+	}
+    
+    console.log( 'initCanvas' );
+    console.log( gCtx );
+    
 }
 
 
@@ -87,12 +54,12 @@ function captureToCanvas() {
             }
             catch(e){       
                 console.log(e);
-                setTimeout(captureToCanvas, 500);
+                setTimeout(captureToCanvas, refreshDelai);
             };
         }
         catch(e){       
                 console.log(e);
-                setTimeout(captureToCanvas, 500);
+                setTimeout(captureToCanvas, refreshDelai);
         };
     }
 }
@@ -103,6 +70,8 @@ function htmlEntities(str) {
 
 function read(a)
 {
+	console.log("read : ");
+	console.log( a );
     var html="<br>";
     if(a.indexOf("http://") === 0 || a.indexOf("https://") === 0)
         html+="<a target='_blank' href='"+a+"'>"+a+"</a><br>";
@@ -126,7 +95,7 @@ function success(stream) {
     else
         v.src = stream;
     gUM=true;
-    setTimeout(captureToCanvas, 500);
+    setTimeout(captureToCanvas, refreshDelai);
 }
 		
 function error(error) {
@@ -157,9 +126,11 @@ function setwebcam()
 	document.getElementById("result").innerHTML="- scanning -";
     if(stype==1)
     {
-        setTimeout(captureToCanvas, 500);    
+		setTimeout(captureToCanvas, refreshDelai);    
         return;
     }
+    initCanvas(800, 600);
+        
     var n=navigator;
     document.getElementById("camdiv").innerHTML = vidhtml;
     v=document.getElementById("v");
@@ -181,21 +152,6 @@ function setwebcam()
 
     
     stype=1;
-    setTimeout(captureToCanvas, 500);
+    setTimeout(captureToCanvas, refreshDelai);
 }
-function setimg()
-{
-	document.getElementById("result").innerHTML="";
-    if(stype==2)
-        return;
-    document.getElementById("outdiv").innerHTML = imghtml;
-    //document.getElementById("qrimg").src="qrimg.png";
-    //document.getElementById("webcamimg").src="webcam2.png";
-    document.getElementById("qrimg").style.opacity=1.0;
-    document.getElementById("webcamimg").style.opacity=0.2;
-    var qrfile = document.getElementById("qrfile");
-    qrfile.addEventListener("dragenter", dragenter, false);  
-    qrfile.addEventListener("dragover", dragover, false);  
-    qrfile.addEventListener("drop", drop, false);
-    stype=2;
-}
+

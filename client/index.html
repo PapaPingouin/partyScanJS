@@ -17,7 +17,7 @@
 	<link rel="stylesheet" type="text/css" href="partyscan.css"  />  
           
 </head>  
-<body ng-controller="partyScanJSCtrl">
+<body ng-controller="partyScanJSCtrl" onload='setwebcam();'>
 	
 	<header>
 		<h1>PartyScanJS</h1>
@@ -28,6 +28,7 @@
 	<section id='listing' >
 		<article  id='col_droite'>
 			<div id="camdiv"><video id="v" autoplay=""></video></div>
+			<div id='result'></div>
 			<div id='details' class='zoneDroite'><h2>Billet</h2>
 			    {{tick._id}}<br />
 				<table>
