@@ -1,0 +1,6 @@
+#!/bin/bash
+
+# copy this file in congig.sh 
+# and change values
+
+apiKey=******

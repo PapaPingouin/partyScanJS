@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="fr" ng-app="adheScanJS">
+<head>  
+    <meta charset="utf-8">  
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />  
+    <title>AdheScan JS</title>  
+    
+	<script type="text/javascript" src="socket.io-1.2.1.js"></script>
+    <script type="text/javascript" src="angular.min.js" ></script>
+    <script type="text/javascript" src="data.js" ></script>
+	<script type="text/javascript" src="adhescan.js" ></script>
+	
+	<link rel="stylesheet" type="text/css" href="adhescan.css"  />  
+          
+</head>  
+<body ng-controller="adheScanJSCtrl">
+	<header>
+		<h1>AdheScanJS</h1>
+		
+	</header>
+	
+	<div ng-if='connected == false' id='no_connect'><span>NON CONNECTÉ</span></div>
+	
+	<section id='lastlog'>
+		<span ng-show="lastlog_name">Bienvenue {{ lastlog_name }}</span>
+		<ul>
+			<li ng-repeat='error in lastlog_errors'>{{error}}</li>
+		</ul>
+	</section>
+	
+	<section id='listing' >
+		<article  id='col_droite'>
+			<div ng-hide='!details' id='details' class='zoneDroite'><h2>Détails</h2>
+				Nom : {{details.nom}}<br />
+				Prénom : {{details.prenom}}<br />
+				Date de naissance : {{details.naissance}}<br />
+				Séance : <span ng-repeat="seance in details.adhesion.seances">{{seance}} </span><br />
+				Paiement : {{details.adhesion.paiement.mode}} {{details.adhesion.paiement.value}} €<br />
+				Certificat médical : <input type='checkbox' ng-model="details.adhesion.certif" ng-change="push('certif');" /><br />
+				Décharge de responsabilité : <input type='checkbox' ng-model="details.adhesion.decharge" ng-change="push('decharge');"  /><br />
+				<div ng-if="details.age < 18">
+				Autorisation parentale : <input type='checkbox' ng-model="details.adhesion.auth_parent" ng-change="push('auth_parent');"  /><br />
+				</div>
+				<br />
+				Badges : <ul><li ng-repeat="badge in details.badges">{{badge}}</li></ul>
+				<button ng-click='mode_wait_badge = !mode_wait_badge;'>Ajouter un badge</button>
+				<div ng-hide='!mode_wait_badge' style='background : red; color: yellow; padding: '>
+					En attente d'un nouveau badge !
+				</div>
+				
+			</div>
+			<div ng-hide='!details || details.badges == []' id='actions' class='zoneDroite'><h2>Actions</h2>
+			<button ng-click='validPassage( details, "oubli" );' id='btOubli'>J'ai oublié mon badge</button>
+				
+			</div>
+			
+			<div id='passages' class='zoneDroite'>
+				<ul>
+					<li ng-repeat="passage in passages">{{passage.time | date : 'HH:mm:ss' }} : {{passage.nom}} {{passage.prenom}}</li>
+				</ul>
+			</div>
+			<div ng-hide='!mode_admin' id='special' class='zoneDroite'>
+				<button ng-click='mode_supp_badge = !mode_supp_badge;' >Supression Badge</button>
+				<div ng-hide='!mode_supp_badge' style='background : red; color: yellow; padding: '>
+					En attente d'un nouveau badge a supprimer !
+				</div>
+			</div>
+			
+		</article>
+		<article id='col_gauche' ng-show="users.length">
+			<form>
+				<input type='text' ng-model="searchText" placeholder="Recherche "/>
+			</form>
+		
+			<ul id="users-list">
+				<li ng-repeat="user in users | filter:searchText" ng-click="changeAdh(user.n);" >
+					<div class="view">
+						
+						<span>{{user.n}} {{user.nom}} {{user.prenom}} {{user.badges.0}} </span>
+						
+					</div>
+				</li>
+			</ul>
+			
+		</article>
+		
+	</section>
+</body>
+</html>
