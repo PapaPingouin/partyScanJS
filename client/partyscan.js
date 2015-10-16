@@ -35,8 +35,30 @@ partyScanJS.controller('partyScanJSCtrl', ['$scope', '$interval',
         
         //console.log( liste );
         
+        $scope.id = '0000';
         $scope.tick = false;
         $scope.payeValue = 0
+        
+        $scope.findTicket = function( val )
+        {
+			val = document.getElementById('id').value;
+			
+			console.log( val );
+			//$scope.id = id;
+			for( var i=0; i< $scope.liste.length; i++ )
+			{
+				if( $scope.liste[ i ]._id == val )
+				{
+					$scope.selectTicket( $scope.liste[ i ] );
+					
+				}
+			}
+			console.log( 'off' );
+			console.log( $scope.tick );
+			
+			
+		}
+        
         
         $scope.selectTicket = function( ticket )
         {
@@ -44,7 +66,9 @@ partyScanJS.controller('partyScanJSCtrl', ['$scope', '$interval',
 			$scope.tick = ticket; //$scope.liste[ index ];
 			console.log( $scope.tick );
 			$scope.payeValue = $scope.tick.total_amount;
+			$scope.tick.clicked=true;
 		}
+        
         
         
         $scope.validePaye = function( mode )
@@ -181,3 +205,11 @@ partyScanJS.controller('partyScanJSCtrl', ['$scope', '$interval',
         
     }
 ]);
+
+
+function receiveTicketId( id )
+{
+	//angular.element( document.getElementById('body')).scope().findTicket( id );
+	document.getElementById( 'id' ).value = id;
+	
+}

@@ -17,7 +17,7 @@
 	<link rel="stylesheet" type="text/css" href="partyscan.css"  />  
           
 </head>  
-<body ng-controller="partyScanJSCtrl" onload='setwebcam();'>
+<body id='body' ng-controller="partyScanJSCtrl" onload='setwebcam();'>
 	
 	<header>
 		<h1>PartyScanJS</h1>
@@ -29,6 +29,7 @@
 		<article  id='col_droite'>
 			<div id="camdiv"><video id="v" autoplay=""></video></div>
 			<div id='result'></div>
+			<input type='text' ng-model='id' id='id' ng-change='findTicket( this.value );' />
 			<div id='details' class='zoneDroite'><h2>Billet</h2>
 			    {{tick._id}}<br />
 				<table>
