@@ -1,6 +1,5 @@
 #!/bin/bash
 
-cd /home/don/adheScanJS/
 
 ./start.sh
 

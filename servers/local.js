@@ -34,6 +34,7 @@ var server = http.createServer(function(req, res) {
     });
 });
 // Chargement de socket.io
+/*
 var io = require('socket.io').listen(server);
 io.sockets.on('connection', function (socket, pseudo) {
     // Quand on client se connecte, on lui envoie un message
@@ -73,26 +74,12 @@ io.sockets.on('connection', function (socket, pseudo) {
         console.log( "[LOCAL] Save BDD OK" );
     }); 
 });
+* 
+*/
+
 console.log( '[LOCAL] Demarrage serveur web');
 server.listen(8080);
 console.log( '[LOCAL] OK' );
-
-
-var server2 = http.createServer(function(req, res) {
-    //console.log( req );
-    var id = req.url.substring(1,20 );
-    if( id.match( /([0-9A-F]+)/ ) ) // pour éviter les requetes hors number (ex : favicon !)
-    {
-		io.emit('log',id);
-		res.end('OK : '+id);
-		console.log( '[LOCAL] transmit '+id );
-	} 
-});
-console.log( '[LOCAL] Demarrage serveur webservice nfc');
-server2.listen( 8081 );
-console.log( '[LOCAL] OK' );
-
-console.log( '[LOCAL] attente événements ...' );
 
 
 function writeData( data )
