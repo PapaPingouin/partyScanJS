@@ -50,7 +50,7 @@ header{
 
 
 #listing{
-	height: 80%;
+	height: 100%;
 	
 }
 
@@ -140,4 +140,8 @@ background: #000;
 }
 #qr-canvas{
     display:none;
+}
+
+button.modified{
+	color: red;
 }

@@ -26,8 +26,8 @@ sounds['bop'] = new Audio('/audio/alarme1.mp3');
 /**
  * Contrôleur de l'application "Todo List" décrite dans le chapitre "La logique d'AngularJS".
  */
-partyScanJS.controller('partyScanJSCtrl', ['$scope', '$interval',
-    function ($scope,$interval  ) {
+partyScanJS.controller('partyScanJSCtrl', ['$scope', '$interval', '$http',
+    function ($scope,$interval,$http  ) {
 
         // Pour manipuler plus simplement les todos au sein du contrôleur
         // On initialise les todos avec un tableau vide : []
@@ -37,13 +37,14 @@ partyScanJS.controller('partyScanJSCtrl', ['$scope', '$interval',
         
         $scope.id = '0000';
         $scope.tick = false;
-        $scope.payeValue = 0
+        $scope.payeValue = 0;
+        $scope.modified = false;
         
         $scope.findTicket = function( val )
         {
 			val = document.getElementById('id').value;
 			
-			console.log( val );
+			console.log( "val : "+val );
 			//$scope.id = id;
 			for( var i=0; i< $scope.liste.length; i++ )
 			{
@@ -53,8 +54,6 @@ partyScanJS.controller('partyScanJSCtrl', ['$scope', '$interval',
 					
 				}
 			}
-			console.log( 'off' );
-			console.log( $scope.tick );
 			
 			
 		}
@@ -67,6 +66,7 @@ partyScanJS.controller('partyScanJSCtrl', ['$scope', '$interval',
 			console.log( $scope.tick );
 			$scope.payeValue = $scope.tick.total_amount;
 			$scope.tick.clicked=true;
+			$scope.$apply();
 		}
         
         
@@ -75,6 +75,17 @@ partyScanJS.controller('partyScanJSCtrl', ['$scope', '$interval',
         {
 			$scope.tick.paiement = { 'mode':mode
 									,'value':$scope.payeValue };
+			$scope.modified = true;
+		}
+        
+        $scope.save = function()
+        {
+			$http({
+				method: 'POST',
+				url: '?',
+				data: JSON.stringify( $scope.liste ),
+				headers: {'Content-Type': 'application/json'}
+			});
 		}
         
         /*
@@ -83,17 +94,18 @@ partyScanJS.controller('partyScanJSCtrl', ['$scope', '$interval',
 		});
         
         */
-        /*
+        
         $scope.check_timer = $interval( function(){
-												if( io.managers[ url_server ].connected.length == 1 && io.managers[ url_server ].connected[0].connected==true  )
-													$scope.connected = true;
-												else
-													$scope.connected = false;
+												if( $scope.modified  )
+												{
+													$scope.save();
+													$scope.modified = false;
 												}
-									 ,1000 );
+											}
+									 ,10000 );
         
         
-        */
+        
         /*
         $scope.onBadge = function( data )
         {
@@ -211,5 +223,7 @@ function receiveTicketId( id )
 {
 	//angular.element( document.getElementById('body')).scope().findTicket( id );
 	document.getElementById( 'id' ).value = id;
+	console.log( 'receiveTicketId :' + id );
+	angular.element( document.getElementById('body')).scope().findTicket( );
 	
 }

@@ -27,11 +27,27 @@ Date.prototype.toYMDHIS = function()
 
 // Chargement du fichier index.html affiché au client
 var server = http.createServer(function(req, res) {
-	//console.log( req );
-    fs.readFile('../client'+req.url, function(error, content) {
-        //res.writeHead(200, {"Content-Type": "text/html"});
-        res.end(content);
-    });
+	if (req.method == 'POST') {
+
+		var data = "";
+		req.on("data", function(chunk) {
+			data += chunk;
+		});
+		req.on("end", function() {
+			console.log( 'receive : '+ data.length +'o' );
+			
+			saveBdd( data );
+			
+			res.end();
+		});
+
+
+	} else {
+		fs.readFile('../client'+req.url, function(error, content) {
+			//res.writeHead(200, {"Content-Type": "text/html"});
+			res.end(content);
+		});
+	}
 });
 // Chargement de socket.io
 /*
@@ -109,7 +125,7 @@ function saveBdd( data )
 	var d = new Date();
 	var datafile = '../client/data.js';
 
-	var buffer = new Buffer( "var listingSrc = "+JSON.stringify( data )+";" );
+	var buffer = new Buffer( "var listingSrc = "+ data +";" );
 
 	fs.open(datafile, 'w', function(err, fd) {
 		if (err) {

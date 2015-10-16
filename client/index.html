@@ -26,10 +26,11 @@
 	
 	
 	<section id='listing' >
-		<article  id='col_droite'>
+		<article  id='col_droite'><button ng-click='save();' ngclass='{modified:modified}'>Save <span ng-if='modified' >*</span></button>
+		
 			<div id="camdiv"><video id="v" autoplay=""></video></div>
 			<div id='result'></div>
-			<input type='text' ng-model='id' id='id' ng-change='findTicket( this.value );' />
+			<input type='text' ng-model='id' id='id'  />
 			<div id='details' class='zoneDroite'><h2>Billet</h2>
 			    {{tick._id}}<br />
 				<table>
@@ -60,7 +61,6 @@
 			<form>
 				<input type='text' ng-model="q" placeholder="Recherche "/>
 			</form>
-		LISTE : {{q}}
 			<ul id="ticket-list">
 				<li ng-repeat="ticket in liste | filter:q" ng-click="selectTicket( ticket );" > 
 					<div class="view">

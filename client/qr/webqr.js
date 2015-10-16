@@ -32,8 +32,12 @@ function initCanvas(w,h)
     gCtx.clearRect(0, 0, w, h);
     
     qrcode.callback = function( data ){
-		console.log('callback : ');
-		console.log( data );
+		console.log('callback : ' + data );
+		
+		if( receiveTicketId )
+			receiveTicketId( data );
+			
+		setTimeout(captureToCanvas, refreshDelai);	
 	}
     
     console.log( 'initCanvas' );
@@ -50,7 +54,9 @@ function captureToCanvas() {
         try{
             gCtx.drawImage(v,0,0);
             try{
+				
                 qrcode.decode();
+                
             }
             catch(e){       
                 console.log(e);
@@ -61,6 +67,7 @@ function captureToCanvas() {
                 console.log(e);
                 setTimeout(captureToCanvas, refreshDelai);
         };
+        //setTimeout(captureToCanvas, refreshDelai);
     }
 }
 
