@@ -132,3 +132,12 @@ div.zoneDroite.ok{
 	width: 150px;
 	margin: 10px;
 }
+
+#camdiv{
+width: 320px;
+height: 240px;
+background: #000;
+}
+#qr-canvas{
+    display:none;
+}

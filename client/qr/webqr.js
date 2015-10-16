@@ -161,7 +161,7 @@ function setwebcam()
         return;
     }
     var n=navigator;
-    document.getElementById("outdiv").innerHTML = vidhtml;
+    document.getElementById("camdiv").innerHTML = vidhtml;
     v=document.getElementById("v");
 
     if(n.getUserMedia)
@@ -179,11 +179,7 @@ function setwebcam()
         n.mozGetUserMedia({video: true, audio: false}, success, error);
     }
 
-    //document.getElementById("qrimg").src="qrimg2.png";
-    //document.getElementById("webcamimg").src="webcam.png";
-    document.getElementById("qrimg").style.opacity=0.2;
-    document.getElementById("webcamimg").style.opacity=1.0;
-
+    
     stype=1;
     setTimeout(captureToCanvas, 500);
 }
