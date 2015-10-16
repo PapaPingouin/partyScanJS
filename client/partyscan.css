@@ -116,3 +116,19 @@ div.zoneDroite{
 	padding: 5vh 10vh;
 }
 
+
+div.zoneDroite.ok{
+	background: lime;
+}
+
+#paiement input{
+	font: 35px bold Verdana,Arial,Tahoma;
+	width: 200px;
+	margin: 20px;
+	padding: 10px;
+}
+#paiement button{
+	font: 30px bold Verdana,Arial,Tahoma;
+	width: 150px;
+	margin: 10px;
+}
