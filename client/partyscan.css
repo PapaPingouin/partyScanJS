@@ -80,7 +80,7 @@ header{
 	overflow: auto;
 	padding: 0 3%;
 }
-#col_gauche li{
+#col_gauche li div{
 	
 	font-size: 3vh;
 	padding: 1% 2%;
@@ -90,12 +90,16 @@ header{
 	background :#eee;
 	transition: 0.5s;
 }
-#col_gauche li:hover{
+#col_gauche li div:hover{
 	
 	box-shadow: 5px 5px 5px #000;
 	transition: 0s;
 	background: #ff7;
 	
+}
+
+#col_gauche li div.paid{
+	background: #b2f4a0;
 }
 
 div.zoneDroite{
@@ -144,4 +148,28 @@ background: #000;
 
 button.modified{
 	color: red;
+}
+
+#totaux{
+position: fixed;
+top: 0;
+right:0;
+height: 30px;
+width: 150px;
+background: #ccc;
+border-left: 1px solid grey;
+border-bottom: 1px solid grey;
+border-bottom-left-radius: 10px;
+
+}
+#totaux div{
+	display: none;
+	font-size: 1.5em;
+}
+#totaux:hover div{
+	display: block;
+}
+span.id{
+	font-size: 0.5em;
+	color:grey;
 }

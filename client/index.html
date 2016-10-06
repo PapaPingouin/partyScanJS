@@ -27,22 +27,27 @@
 	
 	<section id='listing' >
 		<article  id='col_droite'><button ng-click='save();' ngclass='{modified:modified}'>Save <span ng-if='modified' >*</span></button>
-		
+			<div id='totaux'>
+				<div>
+					{{totaux.paid}} € / {{totaux.total}} €
+				</div>
+			</div>
 			<div id="camdiv"><video id="v" autoplay=""></video></div>
 			<div id='result'></div>
 			<input type='text' ng-model='id' id='id'  />
 			<div id='details' class='zoneDroite'><h2>Billet</h2>
-			    {{tick._id}}<br />
+			    {{tick._id.$id}}<br />
 				<table>
-					<tr ng-repeat="peop in tick.insc">
-						<th>{{peop.nom}} {{peop.prenom}}</th>
+					<tr ng-repeat="peop in tick.items">
+						<th>{{peop.firstname}} {{peop.lastname}}</th>
 						<td>{{peop.adhesion}}</td>
 						<td>{{peop.age | number:1}} ans</td>
-						<td>{{peop.amount}} €</td>
+						<td>{{peop.price}} €</td>
 						
 					</tr>
 					<tr ng-show="tick.discount_amount_cart"><td>REDUCTION Adhérent </td><td></td><td></td><td>-{{tick.discount_amount_cart}} €</td></tr>
-					<tr><td>TOTAL </td><td></td><td></td><td>{{tick.total_amount}} €</td></tr>
+					<tr ng-show="tick.don.accept"><td>Don supplémentaire </td><td></td><td></td><td>{{tick.don.amount}} €</td></tr>
+					<tr><td>TOTAL </td><td></td><td></td><td>{{tick.total}} €</td></tr>
 				</table>
 			</div>
 			<div id='paiement' class='zoneDroite' ng-class="{ok: tick.paiement}" ><h2>Paiement</h2>
@@ -50,7 +55,7 @@
 					{{tick.paiement.value}} € - {{tick.paiement.mode}}
 			    </div>
 			    <div ng-show='!tick.paiement'>
-					Reste à payer : {{tick.total_amount}}<br />
+					Reste à payer : {{tick.total}}<br />
 					<input type='text' ng-model='payeValue' /><br />
 					<button ng-click="validePaye('espece');">Espèce</button>
 					<button ng-click="validePaye('cheque');">chèque</button>
@@ -62,13 +67,13 @@
 				<input type='text' ng-model="q" placeholder="Recherche "/>
 			</form>
 			<ul id="ticket-list">
-				<li ng-repeat="ticket in liste | filter:q" ng-click="selectTicket( ticket );" > 
-					<div class="view">
-						{{ticket._id}}
+				<li ng-repeat="ticket in liste | filter:q" ng-click="selectTicket( ticket );"  > 
+					<div class="view"  ng-class="{paid: ticket.paiement}">
+						<span class='id'>{{ticket._id.$id}}</span>
 						
 						<ul>
-							<li ng-repeat="people in ticket.insc">
-								<span>{{people.nom}} {{people.prenom}} </span>
+							<li ng-repeat="people in ticket.items">
+								<span>{{people.firstname}} {{people.lastname}} </span>
 							</li>
 						</ul>
 					

@@ -40,6 +40,15 @@ partyScanJS.controller('partyScanJSCtrl', ['$scope', '$interval', '$http',
         $scope.payeValue = 0;
         $scope.modified = false;
         
+        $scope.totaux = { total : 0, paid: 0};
+        
+        for( var i=0;i<liste.length;i++)
+		{
+			$scope.totaux.total += liste[i].total;
+			if( liste[i].paiement )
+				$scope.totaux.paid += liste[i].paiement.value;
+		}
+        
         $scope.findTicket = function( val )
         {
 			val = document.getElementById('id').value;
@@ -73,9 +82,13 @@ partyScanJS.controller('partyScanJSCtrl', ['$scope', '$interval', '$http',
         
         $scope.validePaye = function( mode )
         {
+			if( !$scope.tick ) 
+				return; // si aucun ticket sélectionné, on kille direct
+				
 			$scope.tick.paiement = { 'mode':mode
 									,'value':$scope.payeValue };
 			$scope.modified = true;
+			$scope.totaux.paid += parseFloat($scope.payeValue);
 		}
         
         $scope.save = function()
@@ -88,12 +101,7 @@ partyScanJS.controller('partyScanJSCtrl', ['$scope', '$interval', '$http',
 			});
 		}
         
-        /*
-        socket.on('log', function (data) {
-			$scope.onBadge( data );
-		});
-        
-        */
+     
         
         $scope.check_timer = $interval( function(){
 												if( $scope.modified  )
@@ -106,114 +114,7 @@ partyScanJS.controller('partyScanJSCtrl', ['$scope', '$interval', '$http',
         
         
         
-        /*
-        $scope.onBadge = function( data )
-        {
-			data = data.toLowerCase();
-			$scope.lastlog_id = data;
-			console.log( data );
-			
-			if( $scope.mode_supp_badge == true )
-			{
-				$scope.pushBadge( data, true ); // send info to server
-				$scope.passages.unshift( { time: new Date(), badge: data, nom: 'SUPPRESSION', prenom: ''  } );
-				return;
-			}
-			else
-			{
-				for( var i in $scope.users )
-				{
-					if( $scope.users[ i ].badges )
-					{
-						for( var j=0;j<$scope.users[ i ].badges.length;j++)
-						{
-							if( $scope.users[ i ].badges[ j ] == data )
-							{
-								$scope.validPassage( $scope.users[ i ], data );
-								return;
-							}
-						}
-					}
-				}
-			}
-			console.log(  'mode_wait_badge',$scope.mode_wait_badge );
-			if( $scope.mode_wait_badge )
-			{
-				$scope.details.badges.push( data );
-				$scope.pushBadge( data, false ); // send info to server
-				$scope.mode_wait_badge = false;
-				return;
-			}
-			$scope.lastlog_name = 'Inconnu';
-			$scope.passages.unshift( { time: new Date(), badge: data, nom: '?', prenom: '?'  } );
-		}
-        
-        $scope.validPassage = function( user, badge )
-        {
-			$scope.lastlog_errors = [];
-			
-			if( ! user.adhesion.paiement )
-				$scope.lastlog_errors.push('Manque règlement');
-			
-			if( ! user.adhesion.certif )
-				$scope.lastlog_errors.push('Manque certificat médical');
-			
-			if( ! user.adhesion.certif && ! user.adhesion.decharge )
-				$scope.lastlog_errors.push('Remplissez une décharge de responsabilité');
-			
-			if( user.age < 18 && ! user.adhesion.auth_parent )
-				$scope.lastlog_errors.push('Manque authorisation parentale');
-			
-			if( $scope.lastlog_errors.length == 0 )
-				sounds['bip'].play();
-			else
-				sounds['bop'].play();
-				
-			$scope.lastlog_name = user.prenom+' '+user.nom;
-			$scope.passages.unshift( { time: new Date(), badge: badge, nom: user.nom, prenom: user.prenom  } );
-			$scope.pass( user._id, badge );
-			
-			$scope.mode_admin = ( user._id == 195 );
-		}
-        
-        
-        
-		
-		$scope.changeAdh = function( index )
-		{
-			$scope.mode_wait_badge = false;
-			$scope.details = $scope.users[ index ];
-			if( $scope.details.badges == undefined )
-				$scope.details.badges = [];
-			console.log( $scope.details );
-		}
-		
-		$scope.pass = function( user_id, badge )
-		{
-			socket.emit( 'push', {  '_id': user_id  ,'type':'passage', value : badge, time: new Date() } );
-			console.log( 'pass', user_id );
-			
-			
-		}
-		$scope.push = function( type )
-		{
-			socket.emit( 'push', {  '_id': $scope.details._id  ,'type':type, value : $scope.details.adhesion[ type ] } );
-			console.log( type, $scope.details.adhesion[ type ] );
-			socket.emit( 'save', $scope.users );
-			console.log( "Save" );
-			
-		}
-		$scope.pushBadge = function( badge_id, remove )
-		{
-			remove = remove || false;
-			
-			socket.emit( 'push', {  '_id': $scope.details._id  ,'type':( remove ? 'suppbadge':'badge' ), value : badge_id , time: new Date() } );
-			console.log( ( remove ? 'suppBadge':'addBadge' ),badge_id );
-			socket.emit( 'save', $scope.users );
-			console.log( "Save" );
-		
-		}
-		*/
+      
         
     }
 ]);
